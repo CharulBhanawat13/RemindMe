@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.charul.reminddemo.MainActivity"
+    android:orientation="vertical"
+    android:background="@drawable/home_wall">
+
+    <Button
+        android:id="@+id/Task"
+        android:layout_width="180dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/shape"
+        android:text="ADD TASK"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        android:layout_gravity="center"/>
+
+
+    <Button
+        android:background="@drawable/shape"
+        android:layout_width="180dp"
+        android:layout_height="70dp"
+        android:onClick="storage"
+        android:text="SHOW REMINDERS"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:layout_marginTop="70dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_gravity="center"
+        />
+    <Button
+        android:background="@drawable/shape"
+        android:layout_width="180dp"
+        android:layout_height="70dp"
+        android:onClick="startJourney"
+        android:text="START JOURNEY"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:layout_marginTop="70dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_gravity="center"
+        />
+
+</LinearLayout>

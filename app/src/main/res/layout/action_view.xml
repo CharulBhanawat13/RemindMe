@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    >
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/locationSearch"
+    android:layout_width="230dp"
+    android:layout_height="match_parent"
+    android:inputType="textFilter"
+    android:textStyle="bold"
+    android:textColor="#ffffff"
+    android:hint="Enter location...."
+    android:textColorHint="#ffffff">
+
+
+
+</EditText>
+
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/search_icon"
+        android:src="@drawable/places_ic_search"
+android:background="@color/colorPrimary"
+        android:layout_marginRight="5dp"/>
+</LinearLayout>
