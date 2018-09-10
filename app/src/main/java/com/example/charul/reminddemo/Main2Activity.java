@@ -274,7 +274,7 @@ public class Main2Activity extends AppCompatActivity {
             alertDialog.show();
         }
 
-        //Well there are tasks in user's task list and he intends to share few...
+        //Well there are tasks in user's task list and he intends to seriously share few...
         if (flag > 0) {
             try {
                 sendIntent.putExtra(Intent.EXTRA_TEXT, message.toString());
