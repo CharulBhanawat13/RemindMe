@@ -35,16 +35,15 @@ public class Main2Activity extends AppCompatActivity {
 
     ArrayList<String> TaskList = new ArrayList<String>();
     ArrayList<String> LocationList = new ArrayList<String>();
-    ArrayList<Double> LatitudeList=new ArrayList<>();
-    ArrayList<Double> LongitudeList=new ArrayList<>();
+    ArrayList<Double> LatitudeList = new ArrayList<>();
+    ArrayList<Double> LongitudeList = new ArrayList<>();
     ArrayList<LatLng> locationParce = new ArrayList();
-    CheckBox[] cb=new CheckBox[100];
-    TextView[] txtLat=new TextView[100];
-    TextView[] txtLon=new TextView[100];
-    int count=0;
+    CheckBox[] cb = new CheckBox[100];
+    TextView[] txtLat = new TextView[100];
+    TextView[] txtLon = new TextView[100];
+    int count = 0;
     LinearLayout ll;
     ShareActionProvider mShareActionProvider;
-
 
 
     @Override
@@ -80,19 +79,20 @@ public class Main2Activity extends AppCompatActivity {
         finish();
         return true;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);//1793695812
         // setContentView(R.layout.activity_main2);
         final ScrollView sv = new ScrollView(this);
 
-        v=findViewById(android.R.id.content);
+        v = findViewById(android.R.id.content);
         ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
         sv.addView(ll);
         setTitle("Your To-DO List");
-       sv.setBackgroundResource(R.drawable.crush);
+        sv.setBackgroundResource(R.drawable.crush);
         ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0A053D")));
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -112,11 +112,11 @@ public class Main2Activity extends AppCompatActivity {
         LatitudeList = tinydb.getListDouble("LatitudesList");
         LongitudeList = tinydb.getListDouble("LongitudesList");
 
-        Log.d("Val=",+t+","+l);
+        Log.d("Val=", +t + "," + l);
         t = TaskList.size();
         l = LocationList.size();
-        int lat=LatitudeList.size();
-        int lon=LongitudeList.size();
+        int lat = LatitudeList.size();
+        int lon = LongitudeList.size();
 
         Intent intent = new Intent();
         intent.putExtra("locationParce", locationParce);
@@ -124,20 +124,20 @@ public class Main2Activity extends AppCompatActivity {
         //finish();
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(175,40,0,0);
+        params.setMargins(175, 40, 0, 0);
 
-        for (int i = 0; i < t && i < l && i<lat && i < lon; i++) {
+        for (int i = 0; i < t && i < l && i < lat && i < lon; i++) {
             cb[i] = new CheckBox(this);
-            cb[i].setText(TaskList.get(i) + " From " + LocationList.get(i) );
+            cb[i].setText(TaskList.get(i) + " From " + LocationList.get(i));
 
-            ll.addView(cb[i],params);
+            ll.addView(cb[i], params);
             cb[i].setId(i);
-            txtLat[i]=new TextView(this);
-            txtLat[i].setText("Lat= "+(LatitudeList.get(i)).toString());
-            txtLon[i]=new TextView(this);
-            txtLon[i].setText("Long= "+(LongitudeList.get(i)).toString());
-            ll.addView(txtLat[i],params);
-            ll.addView(txtLon[i],params);
+            txtLat[i] = new TextView(this);
+            txtLat[i].setText("Lat= " + (LatitudeList.get(i)).toString());
+            txtLon[i] = new TextView(this);
+            txtLon[i].setText("Long= " + (LongitudeList.get(i)).toString());
+            ll.addView(txtLat[i], params);
+            ll.addView(txtLon[i], params);
 
 
             locationParce.add(new LatLng(LatitudeList.get(i), LongitudeList.get(i)));
@@ -230,51 +230,60 @@ public class Main2Activity extends AppCompatActivity {
         }
 
     }
-    void share()
-{
-    int flag=0;
-    for(int i = 0;i<count;i++) {
-        if( cb[i].isChecked()){
-            flag++;
+
+    void share() {
+        
+        //First check whether tasks are fed or not
+        if (count == 0) {
+            AlertDialog alertDialog = new AlertDialog.Builder(Main2Activity.this).create();
+            alertDialog.setTitle("Alert Dialog");
+            alertDialog.setMessage("No items to share");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+
+        int flag = 0;
+        StringBuilder message = new StringBuilder();
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        message.append("This message is from application under testing(AUT).Application is in the stage of maturity.PLEASE IGNORE \n");
+        for (int i = 0; i < count; i++) {
+            if (cb[i].isChecked()) {
+                flag++;
+                message.append("TASK "+(i+1)+": "+TaskList.get(i));
+                message.append(" FROM ");
+                message.append(LocationList.get(i)+"\n\n");
+            }
+        }
+
+        //Now check whether any task is selected or not
+        if (flag == 0 && count != 0) {
+            AlertDialog alertDialog = new AlertDialog.Builder(Main2Activity.this).create();
+            alertDialog.setTitle("Alert Dialog");
+            alertDialog.setMessage("No items selected");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+
+        //Well there are tasks in user's task list and he intends to share few...
+        if (flag > 0) {
             try {
-                Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT,"This message is from application under testing(AUT).Application is in the stage of maturity.PLEASE IGNORE \n"
-                        +TaskList.get(i)+" from "+LocationList.get(i));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, message.toString());
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
-
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "SMS failed, please try again later!", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
     }
-    if(count==0 )
-    {
-        AlertDialog alertDialog = new AlertDialog.Builder(Main2Activity.this).create();
-        alertDialog.setTitle("Alert Dialog");
-        alertDialog.setMessage("No items to share");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
-    if(flag==0 && count!=0)
-    {
-        AlertDialog alertDialog = new AlertDialog.Builder(Main2Activity.this).create();
-        alertDialog.setTitle("Alert Dialog");
-        alertDialog.setMessage("No items selected");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
-}
-
 }
