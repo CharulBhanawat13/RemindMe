@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
     final Context context=this;
-    Button Task;
+    ImageButton Task;
     String stred;
     View v;
     ArrayList<String> TaskList =new ArrayList<String>();
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         v=findViewById(android.R.id.content);
-        Task = (Button) findViewById(R.id.Task);
+        Task = (ImageButton) findViewById(R.id.Task);
 
         final TinyDB tinydb = new TinyDB(this);
         LatitudeList = tinydb.getListDouble("LatitudesList");

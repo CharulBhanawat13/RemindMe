@@ -6,44 +6,35 @@
     android:layout_height="match_parent"
     tools:context="com.example.charul.reminddemo.MainActivity"
     android:orientation="vertical"
-    android:background="@drawable/home_wall">
+    android:background="@drawable/starswallpaper"
+  >
 
-    <Button
+    <ImageButton
         android:id="@+id/Task"
-        android:layout_width="180dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="120dp"
-        android:background="@drawable/shape"
-        android:text="ADD TASK"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="22dp"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
-
-
-    <Button
-        android:background="@drawable/shape"
-        android:layout_width="180dp"
-        android:layout_height="70dp"
-        android:onClick="storage"
-        android:text="SHOW REMINDERS"
-        android:textStyle="bold"
-        android:textSize="22dp"
-        android:layout_marginTop="70dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="124dp"
+        android:layout_height="118dp"
         android:layout_gravity="center"
-        />
-    <Button
-        android:background="@drawable/shape"
-        android:layout_width="180dp"
-        android:layout_height="70dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/addtask" />
+
+
+    <ImageButton
+        android:layout_width="149dp"
+        android:layout_height="114dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/savelist"
+        android:onClick="storage" />
+
+    <ImageButton
+        android:layout_width="175dp"
+        android:layout_height="155dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/ridingbke"
         android:onClick="startJourney"
-        android:text="START JOURNEY"
-        android:textStyle="bold"
-        android:textSize="22dp"
-        android:layout_marginTop="70dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_gravity="center"
-        />
+        android:scaleType="centerInside"
+        android:visibility="visible" />
 
-</LinearLayout>
+   </LinearLayout>
