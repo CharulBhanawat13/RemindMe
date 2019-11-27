@@ -390,8 +390,6 @@ public class TinyDB {
         preferences.edit().putString(key, TextUtils.join("‚‗‚", myDoubleList)).apply();
     }
 
-//888888888888888888888888888888888888888888888888888888888888
-
     public void putListMarker(String key, ArrayList<Marker> marklist) {
         checkForNullKey(key);
         Marker[] myMarkerList = marklist.toArray(new Marker[marklist.size()]);

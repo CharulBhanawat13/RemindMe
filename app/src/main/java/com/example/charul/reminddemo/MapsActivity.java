@@ -70,7 +70,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String TAG = MapsActivity.class.getSimpleName();
     boolean flag = false;
     Location my = new Location(LocationManager.NETWORK_PROVIDER);
-   // private static final int REQ_PERMISSION = 1;
     ArrayList<String> LocationList = new ArrayList<String>();
 
     ArrayList<Double> LatitudeList = new ArrayList<>();
@@ -88,7 +87,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     EditText locationSearch;
     ArrayList<Marker> mark_list = new ArrayList<Marker>();
     ImageButton search_icon;
-   // LinearLayout line1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,10 +104,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
-           // Toast.makeText(this,"Success",Toast.LENGTH_LONG).show();
         }
-
-
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -121,11 +116,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-
         text = (TextView) findViewById(R.id.text);
 
-
-        //Setting up the action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0A053D")));
@@ -140,11 +132,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         displayLocationSettingsRequest(this);
 
-        //========Checking for internet connectivity==============================================
        conn=  checkConnection(this);
         if(conn)
         {
-          //  Toast.makeText(this,"Connected ",Toast.LENGTH_LONG).show();
         }
         else
         {
@@ -160,7 +150,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         }
-        //================finish checking internet connectivity==========================================
 
 
         LocationList.clear();
@@ -198,40 +187,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (location != null) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-                  //  Toast.makeText(getBaseContext(), "l=" + latitude + ",L=" + longitude, Toast.LENGTH_SHORT).show();
                 }
             }
         };
 
-        /////////////////////////////////////////////////Checking GPS and Network//////////////////////////////////////////////////////////////////
-       /* if (!isGPSEnabled && !isNetworkEnabled) {
-            Toast.makeText(this, "No network available", Toast.LENGTH_SHORT).show();
-
-        } else {
-            this.canGetLocation = true;
-            if (isGPSEnabled) {
-                if (location == null) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 3, listener);
-                    // Toast.makeText(this, "GPS available", Toast.LENGTH_SHORT).show();
-                    if (locationManager != null) {
-                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                            return;
-                        }
-                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    }
-                }
-            }
-            if (isNetworkEnabled) {
-                //  Toast.makeText(this, " network available", Toast.LENGTH_SHORT).show();
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 3, listener);
-                if (locationManager != null) {
-                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                }
-            }
-        }*/
-////////////////////////////////////////////////////////////finish Checking GPs nd Network//////////////////////////////////////////////////////////////////
 
 search_icon.setOnClickListener(new View.OnClickListener() {
     @Override
@@ -251,8 +210,7 @@ search_icon.setOnClickListener(new View.OnClickListener() {
             }
         });
 
-    }// oncreate finish
-
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -311,7 +269,6 @@ search_icon.setOnClickListener(new View.OnClickListener() {
     }
 
     public void setUpMap() {
-        // mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             return;
@@ -319,9 +276,7 @@ search_icon.setOnClickListener(new View.OnClickListener() {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
-        // addMarkeratLocation();
     }
-
 
     //for implementing the back button in action bar
     public boolean onSupportNavigateUp() {
@@ -333,11 +288,8 @@ search_icon.setOnClickListener(new View.OnClickListener() {
         setMarker(latLng);
         double lat=latLng.latitude;
         double lng=latLng.longitude;
-        //Toast.makeText(getBaseContext(),"This is"+lat+", "+lng,Toast.LENGTH_SHORT).show();
         addressDragged(lat,lng);
     }
-
-
 
     public void setMarker(LatLng latLng)
     {
@@ -363,14 +315,10 @@ search_icon.setOnClickListener(new View.OnClickListener() {
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 double lat=marker.getPosition().latitude;
                 double lng=marker.getPosition().longitude;
-                //Toast.makeText(getBaseContext(),""+lat+", "+lng,Toast.LENGTH_SHORT).show();
                 addressDragged(lat,lng);
             }
         });
     }
-
-
-    //-------------------------------------------For searching particular location from edittext method---------------------------------
     public void getLocationFromAddress(Context context,String strAddress) {
 
         Geocoder coder = new Geocoder(context);
@@ -388,10 +336,8 @@ search_icon.setOnClickListener(new View.OnClickListener() {
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(p1, zoom);
                 mMap.animateCamera(cameraUpdate);
                 setMarker(p1);
-               // addressDragged(p1.latitude,p1.longitude);
             }
             else {
-                // Toast.makeText(this,"no location",Toast.LENGTH_LONG).show();
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("Alert Dialog");
                 alertDialog.setMessage("No match found");
@@ -406,17 +352,10 @@ search_icon.setOnClickListener(new View.OnClickListener() {
         } catch (IOException ex) {
             ex.printStackTrace();
         }catch (IllegalArgumentException illegalArgumentException) {
-            // Catch invalid latitude or longitude values.
             Toast.makeText(this,"No match found",Toast.LENGTH_LONG).show();
         }
     }
-//---------------------------------------------Finish searcging location in edittext method--------------------------------------------
 
-
-
-
-
-  //****************************************Start Address Dragged*************************************************************************
     public void addressDragged(final double lat, final double lng){
         String addres="Check connection" ;
         Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
@@ -431,61 +370,10 @@ search_icon.setOnClickListener(new View.OnClickListener() {
             else  {
                 result="Failed to retrieve address.";
             }
-           // Toast.makeText(this,""+addressList.size(),Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             Toast.makeText(this,"Unable to connect to geocoder",Toast.LENGTH_LONG).show();
             result="Unnamed Road";
         }
-     /*   final Dialog dialogSave = new Dialog(this);
-        dialogSave.setContentView(R.layout.saveloc);
-    //    dialogSave.setTitle("Confirmation message");
-        dialogSave.setTitle("Do you want to save location?");
-       // TextView txt1=(TextView)dialogSave.findViewById(R.id.txt1);
-        final TextView addrTxt=(TextView) dialogSave.findViewById(R.id.addrTxt);
-        Button dialogButton = (Button) dialogSave.findViewById(R.id.Save);
-        Button Cancel = (Button) dialogSave.findViewById(R.id.Cancel);
-        addrTxt.setText(result);
-        final TinyDB tinydb = new TinyDB(this);
-        text.setText(result);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                flag=true;
-                LatitudeList.add(lat);
-                LongitudeList.add(lng);
-                LocationList.add(result);
-                Bundle bundle = getIntent().getExtras();
-                String stred = bundle.getString("stred");
-                TaskList.add(stred);
-                tinydb.putListDouble("LatitudesList", LatitudeList);
-                tinydb.putListDouble("LongitudesList", LongitudeList);
-                LatitudeList = tinydb.getListDouble("LatitudesList");
-                LongitudeList = tinydb.getListDouble("LongitudesList");
-                tinydb.putListString("LocationsList", LocationList);
-                tinydb.putListString("TasksList", TaskList);
-                LocationList = tinydb.getListString("LocationsList");
-                TaskList = tinydb.getListString("TasksList");
-                dialogSave.dismiss();
-                MapsActivity.super.onBackPressed();
-            }
-        });
-        Cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addrTxt.setText(" ");
-                text.setText("");
-                result="";
-                dialogSave.dismiss();
-            }
-        });
-        tinydb.putListDouble("LatitudesList", LatitudeList);
-        tinydb.putListDouble("LongitudesList", LongitudeList);
-        LatitudeList = tinydb.getListDouble("LatitudesList");
-        LongitudeList = tinydb.getListDouble("LongitudesList");
-        tinydb.putListString("LocationsList", LocationList);
-        LocationList = tinydb.getListString("LocationsList");
-        dialogSave.show();*/
-
         AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
         alertDialog.setTitle("Do you want to save location?");
         alertDialog.setMessage(result);
@@ -514,36 +402,22 @@ search_icon.setOnClickListener(new View.OnClickListener() {
 
                     }
                 });
-        /*alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
 
-                        text.setText("");
-                        dialog.dismiss();
-                        result="";
-
-                    }
-                });*/
         alertDialog.setMessage(result);
         alertDialog.show();
 
 
     }
-//****************************************Stop Address Dragged*****************************************************************************
-
 
     @Override
     public void onMapClick(LatLng latLng) {
-        //line1.removeView(LinearLayout line1);
     }
 
 
-    //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&  Internet Connection Checking   &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
     public static boolean checkConnection(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connMgr.getActiveNetworkInfo();
         if (activeNetworkInfo != null) { // connected to the internet
-         //   Toast.makeText(context, activeNetworkInfo.getTypeName(), Toast.LENGTH_SHORT).show();
             if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 // connected to wifi
                 return true;
@@ -554,7 +428,6 @@ search_icon.setOnClickListener(new View.OnClickListener() {
         }
         return false;
     }
-    // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&Internet Connection Checking Over&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
     private void displayLocationSettingsRequest(Context context) {
@@ -603,7 +476,6 @@ search_icon.setOnClickListener(new View.OnClickListener() {
 
 
     }
-    //==============================================EditText Location Search function()=======================================
     public void search_location_func()
     {
         String search_location=locationSearch.getText().toString();

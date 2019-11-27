@@ -140,11 +140,9 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
                         for (int i = 0; i < locationParce.size(); i++) {
                             flag = 1;
                             markerForGeofence(locationParce.get(i), i);
-                            // startGeofence();
 
                         }
                         startGeofence();
-                        // locationParce.clear();
                     }
                     return true;
                 }
@@ -172,24 +170,18 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
         setTitle("Your Fences");
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0A053D")));
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-       // getSupportActionBar().setLogo(R.mipmap.icon_bell);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-
-        //For displaying the back button in action bar
         bar.setDisplayHomeAsUpEnabled(true);
 
 
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-          //  Toast.makeText(this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
         }
 
 
-        // initialize GoogleMaps
         initGMaps();
-        // create GoogleApiClient
         createGoogleApi();
 
         final TinyDB tinydb = new TinyDB(this);
@@ -208,10 +200,7 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
         int f=LatitudeList.size();
         for(int i=0;i<f;i++) {
             locationParce.add(new LatLng(LatitudeList.get(i), LongitudeList.get(i)));
-            //   markerForGeofence(locationParce.get(i),i);
         }
-
-        //For enabling GPS
         displayLocationSettingsRequest(this);
 
 
@@ -219,7 +208,6 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
         boolean conn=  checkConnection(this);
         if(conn)
         {
-            //Toast.makeText(this,"connected ",Toast.LENGTH_LONG).show();
 
         }
         else
@@ -259,8 +247,6 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onMapClick(LatLng latLng) {
         Log.d(TAG, "onMapClick(" + latLng + ")");
-        //  locs.add(latLng);       //8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
-     //   markerForGeofence(latLng);
     }
 
     @Override
@@ -288,7 +274,6 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onStop() {
         super.onStop();
-
         // Disconnect GoogleApiClient when stopping Activity
         googleApiClient.disconnect();
     }
@@ -331,11 +316,6 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
         } else askPermission();
     }
 
-
-    // Defined in mili seconds.
-    // This number in extremely low, and should be used only for debug
-   // private final int UPDATE_INTERVAL =  1000;
-   // private final int FASTEST_INTERVAL = 900;
 
     // Start location Updates
     private void startLocationUpdates() {
@@ -447,7 +427,7 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
                 .draggable(false);
         if (map != null) {
 
-            geoFenceMarker = map.addMarker(markerOptions);      //88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+            geoFenceMarker = map.addMarker(markerOptions);
             gfmarkr.add(geoFenceMarker);
 
         }
@@ -484,10 +464,6 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
 
     private PendingIntent createGeofencePendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
-        //if (geoFencePendingIntent != null)
-          //  return geoFencePendingIntent;
-
-
         Intent intent = new Intent(this, GeofenceTrasitionService.class);
         return PendingIntent.getService(this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -521,11 +497,8 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
     private void drawGeofence(Marker mark) {
         Log.d(TAG, "drawGeofence()");
 
-/*        if (geoFenceLimits != null)
-            geoFenceLimits.remove();
-*/
         CircleOptions circleOptions = new CircleOptions()
-                .center(mark.getPosition())                    //888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+                .center(mark.getPosition())
                 .strokeColor(Color.argb(50, 70, 70, 70))
                 .fillColor(Color.argb(100, 150, 150, 150))
                 .radius(GEOFENCE_RADIUS);
@@ -540,13 +513,11 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
 
 
     public void startGeofence() {
-// public void startGeofence() {
         Log.i(TAG, "startGeofence()");
         if (geoFenceMarker != null) {
 
             for (int i = 0; i < gfmarkr.size(); i++) {
                 Geofence geofence = createGeofence(gfmarkr.get(i), GEOFENCE_RADIUS, TaskList.get(i)+i);   //geoFenceMarker.getPosition()
-                //  Geofence geofence = createGeofence(geoFenceMarker.getPosition(), GEOFENCE_RADIUS);
                 GeofencingRequest geofenceRequest = createGeofenceRequest(geofence);
                 addGeofence(geofenceRequest,gfmarkr.get(i));
             }
@@ -566,7 +537,6 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
         NetworkInfo activeNetworkInfo = connMgr.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null) { // connected to the internet
-            //   Toast.makeText(context, activeNetworkInfo.getTypeName(), Toast.LENGTH_SHORT).show();
 
             if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 // connected to wifi
@@ -606,8 +576,7 @@ public class Main3Activity extends AppCompatActivity implements GoogleApiClient.
                         Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
 
                         try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
+
                             status.startResolutionForResult(Main3Activity.this, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                             Log.i(TAG, "PendingIntent unable to execute request.");

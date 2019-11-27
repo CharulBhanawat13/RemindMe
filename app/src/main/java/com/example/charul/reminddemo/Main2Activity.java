@@ -62,7 +62,6 @@ public class Main2Activity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate menu resource file.
         getMenuInflater().inflate(R.menu.sharee, menu);
 
 
@@ -84,7 +83,6 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);//1793695812
-        // setContentView(R.layout.activity_main2);
         final ScrollView sv = new ScrollView(this);
 
         v = findViewById(android.R.id.content);
@@ -99,7 +97,6 @@ public class Main2Activity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-//For displaying the back button in action bar
         bar.setDisplayHomeAsUpEnabled(true);
 
         TinyDB tinydb = new TinyDB(getApplicationContext());
@@ -121,7 +118,6 @@ public class Main2Activity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("locationParce", locationParce);
         setResult(RESULT_OK, intent);
-        //finish();
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(175, 40, 0, 0);
@@ -232,8 +228,6 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     void share() {
-        
-        //First check whether tasks are fed or not
         if (count == 0) {
             AlertDialog alertDialog = new AlertDialog.Builder(Main2Activity.this).create();
             alertDialog.setTitle("Alert Dialog");
