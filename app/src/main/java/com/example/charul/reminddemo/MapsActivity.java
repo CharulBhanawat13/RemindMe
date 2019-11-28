@@ -1,10 +1,8 @@
 package com.example.charul.reminddemo;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -28,23 +26,18 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -62,7 +55,7 @@ import java.util.Locale;
 
 import static com.example.charul.reminddemo.R.layout.action_view;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private GoogleMap mMap;
     boolean isGPSEnabled = false;
     boolean isNetworkEnabled = false;
@@ -76,25 +69,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     private GoogleApiClient googleApiClient;
     private LocationManager locationManager;
+
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private Marker geoFenceMarker;
     String result;
-    TextView text;
+    Location l;
+
     boolean conn;
     EditText locationSearch;
     ArrayList<Marker> mark_list = new ArrayList<Marker>();
     ImageButton search_icon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_maps);
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -109,11 +105,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     PERMISSION_ACCESS_COARSE_LOCATION);
         }
 
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        text = (TextView) findViewById(R.id.text);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -126,8 +120,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationSearch = (EditText) actionBar.getCustomView().findViewById(
                 R.id.locationSearch);
         search_icon=(ImageButton)actionBar.getCustomView().findViewById(R.id.search_icon);
-
-        displayLocationSettingsRequest(this);
         conn=  checkConnection(this);
 
         if(!conn)
@@ -145,7 +137,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             alertDialog.show();
         }
 
-
         LocationList.clear();
         LatitudeList.clear();
         LongitudeList.clear();
@@ -157,13 +148,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationList = tinydb.getListString("LocationsList");
         TaskList = tinydb.getListString("TasksList");
 
-
-
-search_icon.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-       search_location_func();
-    }
+        search_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               search_location_func();
+            }
 });
 
         locationSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -176,8 +165,8 @@ search_icon.setOnClickListener(new View.OnClickListener() {
                 return false;
             }
         });
-
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -192,7 +181,6 @@ search_icon.setOnClickListener(new View.OnClickListener() {
                 break;
         }
     }
-
 
         protected void onStop() {
         googleApiClient.disconnect();
@@ -212,6 +200,7 @@ search_icon.setOnClickListener(new View.OnClickListener() {
 
         mMap = googleMap;
         setUpMap();
+
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
     }
@@ -234,6 +223,8 @@ search_icon.setOnClickListener(new View.OnClickListener() {
 
     }
 
+
+
     public void setUpMap() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -242,6 +233,14 @@ search_icon.setOnClickListener(new View.OnClickListener() {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
+
+   //     CameraUpdate update = CameraUpdateFactory.newLatLng(new LatLng(l.getLatitude(), l.getLongitude()));
+//        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+//
+//        mMap.moveCamera(update);
+//        mMap.animateCamera(zoom);
+
+
     }
 
     //for implementing the back button in action bar
@@ -249,6 +248,7 @@ search_icon.setOnClickListener(new View.OnClickListener() {
         finish();
         return true;
     }
+
     @Override
     public void onMapLongClick(LatLng latLng) {
         setMarker(latLng);
@@ -343,7 +343,7 @@ search_icon.setOnClickListener(new View.OnClickListener() {
         AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
         alertDialog.setTitle("Do you want to save location?");
         alertDialog.setMessage(result);
-        text.setText(result);
+      //  text.setText(result);
         final TinyDB tinydb = new TinyDB(this);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
@@ -395,52 +395,7 @@ search_icon.setOnClickListener(new View.OnClickListener() {
     }
 
 
-    private void displayLocationSettingsRequest(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API).build();
-        googleApiClient.connect();
 
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(10000 / 2);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
-
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i(TAG, "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-
-                        try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
-                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
-                }
-            }
-
-
-
-        });
-
-
-
-    }
     public void search_location_func()
     {
         String search_location=locationSearch.getText().toString();
@@ -470,5 +425,6 @@ search_icon.setOnClickListener(new View.OnClickListener() {
             }
         }
     }
+
 
 }
