@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 final Dialog dialog = new Dialog(context);
                     dialog.setContentView(R.layout.custom);
                     dialog.setTitle("ADD TASK");
+                    dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_custom);
                     final EditText ed = (EditText) dialog.findViewById(R.id.edt1);
-                    final Button Location = (Button) dialog.findViewById(R.id.Location);
+                    final ImageButton Location = (ImageButton) dialog.findViewById(R.id.Location);
                     Button Cancel = (Button) dialog.findViewById(R.id.Cancel);
                     v = findViewById(android.R.id.content);
                     final TinyDB tinydb = new TinyDB(context);
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void startJourney(View v)
     {
         Intent intent=new Intent(this,Main3Activity.class);
-        intent.putExtra("locationParce", locationParce);//sap
+        intent.putExtra("locationParce", locationParce);
         setResult(RESULT_OK, intent);
         startActivityForResult(intent,2);
     }
@@ -128,9 +129,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 || requestCode==2) {
             if(resultCode == RESULT_OK) {
-                locationParce= data.getParcelableArrayListExtra("locationParce");//sa
+                locationParce= data.getParcelableArrayListExtra("locationParce");
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("locationParce", locationParce);//spa
+                bundle.putParcelableArrayList("locationParce", locationParce);
             }
         }
     }

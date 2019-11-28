@@ -66,10 +66,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     boolean isGPSEnabled = false;
     boolean isNetworkEnabled = false;
-    boolean canGetLocation = false;
     private static final String TAG = MapsActivity.class.getSimpleName();
     boolean flag = false;
-    Location my = new Location(LocationManager.NETWORK_PROVIDER);
     ArrayList<String> LocationList = new ArrayList<String>();
 
     ArrayList<Double> LatitudeList = new ArrayList<>();
@@ -79,7 +77,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient googleApiClient;
     private LocationManager locationManager;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
-    int b;
     private Marker geoFenceMarker;
     String result;
     TextView text;
@@ -131,12 +128,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         search_icon=(ImageButton)actionBar.getCustomView().findViewById(R.id.search_icon);
 
         displayLocationSettingsRequest(this);
+        conn=  checkConnection(this);
 
-       conn=  checkConnection(this);
-        if(conn)
-        {
-        }
-        else
+        if(!conn)
         {
             AlertDialog.Builder builder =new AlertDialog.Builder(this);
             builder.setTitle("No internet Connection");
@@ -163,33 +157,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationList = tinydb.getListString("LocationsList");
         TaskList = tinydb.getListString("TasksList");
 
-        LocationListener listener = new LocationListener() {
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onLocationChanged(Location location) {
-                // TODO Auto-generated method stub
-
-                if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                }
-            }
-        };
 
 
 search_icon.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +211,6 @@ search_icon.setOnClickListener(new View.OnClickListener() {
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-
         setUpMap();
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
@@ -357,7 +323,7 @@ search_icon.setOnClickListener(new View.OnClickListener() {
     }
 
     public void addressDragged(final double lat, final double lng){
-        String addres="Check connection" ;
+        String addres; ;
         Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
         try {
@@ -405,7 +371,6 @@ search_icon.setOnClickListener(new View.OnClickListener() {
 
         alertDialog.setMessage(result);
         alertDialog.show();
-
 
     }
 
